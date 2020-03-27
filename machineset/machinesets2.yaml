@@ -1,33 +1,59 @@
+---
 apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
-  name: ocp-demo-xxyy-worker-eu-central-1-test
-...
+  labels:
+    machine.openshift.io/cluster-api-cluster: cluster-981a-m7nj7
+  name: cluster-981a-m7nj7-additional-compute
+  namespace: openshift-machine-api
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      machine.openshift.io/cluster-api-cluster: ocp-demo-rnh2q
-      machine.openshift.io/cluster-api-machineset: ocp-demo-xxyy-worker-eu-central-1-test
+      machine.openshift.io/cluster-api-cluster: cluster-981a-m7nj7
+      machine.openshift.io/cluster-api-machine-role: worker
+      machine.openshift.io/cluster-api-machine-type: worker
+      machine.openshift.io/cluster-api-machineset: cluster-981a-m7nj7-worker-us-east-1f
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        machine.openshift.io/cluster-api-cluster: ocp-demo-xxyy
+        machine.openshift.io/cluster-api-cluster: cluster-981a-m7nj7
         machine.openshift.io/cluster-api-machine-role: worker
         machine.openshift.io/cluster-api-machine-type: worker
-        machine.openshift.io/cluster-api-machineset: ocp-demo-xxyy-worker-eu-central-1-test
+        machine.openshift.io/cluster-api-machineset: cluster-981a-m7nj7-worker-us-east-1f
     spec:
-      metadata:
-        creationTimestamp: null
       providerSpec:
-      ...
-          placement:
-            availabilityZone: eu-central-1c
-            region: eu-central-1
+        value:
+          ami:
+            id: ami-046fe691f52a953f9
+          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          blockDevices:
+          - ebs:
+              iops: 100
+              volumeSize: 22
+              volumeType: gp2
           credentialsSecret:
             name: aws-cloud-credentials
-          instanceType: m4.xlarge
-          metadata:
-            creationTimestamp: null
-          publicIp: null
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: cluster-981a-m7nj7-worker-profile
+          instanceType: m4.large
+          kind: AWSMachineProviderConfig
+          placement:
+            availabilityZone: us-east-1f
+            region: us-east-1
+          securityGroups:
+          - filters:
+            - name: tag:Name
+              values:
+              - cluster-981a-m7nj7-worker-sg
+          subnet:
+            filters:
+            - name: tag:Name
+              values:
+              - cluster-981a-m7nj7-private-us-east-1f
+          tags:
+          - name: kubernetes.io/cluster/cluster-981a-m7nj7
+            value: owned
+          userDataSecret:
+            name: worker-user-data
