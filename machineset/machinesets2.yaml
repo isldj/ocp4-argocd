@@ -1,14 +1,14 @@
 apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
-  name: ocp-demo-xxyy-worker-us-west-2b
+  name: ocp-demo-xxyy-worker-eu-central-1-test
 ...
 spec:
   replicas: 1
   selector:
     matchLabels:
       machine.openshift.io/cluster-api-cluster: ocp-demo-rnh2q
-      machine.openshift.io/cluster-api-machineset: ocp-demo-xxyy-worker-us-west-2b
+      machine.openshift.io/cluster-api-machineset: ocp-demo-xxyy-worker-eu-central-1-test
   template:
     metadata:
       creationTimestamp: null
@@ -16,15 +16,15 @@ spec:
         machine.openshift.io/cluster-api-cluster: ocp-demo-xxyy
         machine.openshift.io/cluster-api-machine-role: worker
         machine.openshift.io/cluster-api-machine-type: worker
-        machine.openshift.io/cluster-api-machineset: ocp-demo-xxyy-worker-us-west-2b
+        machine.openshift.io/cluster-api-machineset: ocp-demo-xxyy-worker-eu-central-1-test
     spec:
       metadata:
         creationTimestamp: null
       providerSpec:
       ...
           placement:
-            availabilityZone: us-west-2b
-            region: us-west-2
+            availabilityZone: eu-central-1c
+            region: eu-central-1
           credentialsSecret:
             name: aws-cloud-credentials
           instanceType: m4.xlarge
